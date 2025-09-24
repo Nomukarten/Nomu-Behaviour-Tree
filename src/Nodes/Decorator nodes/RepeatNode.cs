@@ -49,6 +49,11 @@ namespace FluentBehaviourTree
             return childStatus;
         }
 
+        public void Reset()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Add a child to the sequence.
         /// </summary>

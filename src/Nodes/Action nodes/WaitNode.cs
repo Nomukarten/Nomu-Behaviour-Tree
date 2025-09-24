@@ -16,6 +16,11 @@ namespace FluentBehaviourTree
         private string name;
 
         /// <summary>
+        /// Current node state
+        /// </summary>
+        private BehaviourTreeStatus nodeState;
+
+        /// <summary>
         /// The amount of time this node waits in ms.
         /// </summary>
         public double duration;
@@ -34,13 +39,19 @@ namespace FluentBehaviourTree
 
         public BehaviourTreeStatus Tick(TimeData time)
         {
-            elapsed += time.deltaTime;
+            elapsed += time.deltaTime*1000;
             if (elapsed >= duration)
             {
-                elapsed = 0;
                 return BehaviourTreeStatus.Success;
             }
             return BehaviourTreeStatus.Running;
+        }
+
+        public void Reset()
+        {
+            nodeState = BehaviourTreeStatus.Ready;
+            elapsed = 0;
+            duration = 0;
         }
     }
 }

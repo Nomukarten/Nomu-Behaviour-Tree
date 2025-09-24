@@ -47,6 +47,11 @@ namespace FluentBehaviourTree
             }
         }
 
+        public void Reset()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Add a child to the parent node.
         /// </summary>

@@ -39,6 +39,14 @@ namespace FluentBehaviourTree
             return BehaviourTreeStatus.Failure;
         }
 
+        public void Reset()
+        {
+            foreach (var child in children)
+            {
+                child.Reset();
+            }
+        }
+
         /// <summary>
         /// Add a child node to the selector.
         /// </summary>

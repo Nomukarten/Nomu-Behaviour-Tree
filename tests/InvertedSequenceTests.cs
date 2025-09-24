@@ -48,6 +48,10 @@ namespace tests
 
             var mockChild1 = new Mock<IBehaviourTreeNode>();
 
+            mockChild1
+                .Setup(m => m.Tick(time))
+                .Returns(BehaviourTreeStatus.Success);
+
             var mockChild2 = new Mock<IBehaviourTreeNode>();
             mockChild2
                 .Setup(m => m.Tick(time))

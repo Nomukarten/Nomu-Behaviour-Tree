@@ -66,6 +66,15 @@ namespace FluentBehaviourTree
             //return BehaviourTreeStatus.Success;
         }
 
+        public void Reset()
+        {
+            currentIndex = 0;
+            foreach (var child in children)
+            {
+                child.Reset();
+            }
+        }
+
         /// <summary>
         /// Add a child to the sequence.
         /// </summary>

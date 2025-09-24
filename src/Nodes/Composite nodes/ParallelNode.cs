@@ -65,6 +65,14 @@ namespace FluentBehaviourTree
             return BehaviourTreeStatus.Running;
         }
 
+        public void Reset()
+        {
+            foreach (var child in children)
+            {
+                child.Reset();
+            }
+        }
+
         public void AddChild(IBehaviourTreeNode child)
         {
             children.Add(child);

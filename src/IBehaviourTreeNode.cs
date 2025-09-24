@@ -14,5 +14,10 @@ namespace FluentBehaviourTree
         /// Update the time of the behaviour tree.
         /// </summary>
         BehaviourTreeStatus Tick(TimeData time);
+
+        /// <summary>
+        /// Reset the state of the node
+        /// </summary>
+        void Reset();
     }
 }

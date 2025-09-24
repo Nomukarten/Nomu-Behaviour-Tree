@@ -10,6 +10,7 @@ namespace FluentBehaviourTree
     /// </summary>
     public enum BehaviourTreeStatus
     {
+        Ready,
         Success,
         Failure,
         Running

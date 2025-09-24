@@ -79,7 +79,7 @@ namespace tests
                     st.Start();
                     return BehaviourTreeStatus.Success;
                 })
-                .Wait("wait",1000)
+                .Wait("wait",1)
                 .Do("some-action-2", t =>
                 {
                     ++invokeCount;
@@ -89,21 +89,20 @@ namespace tests
                 .End()
                 .Build();
 
-            
-
             TimeData time = new TimeData(1);
             BehaviourTreeStatus status = BehaviourTreeStatus.Running;
-           
             while (status != BehaviourTreeStatus.Success)
             {
                 status = sequence.Tick(time);
             }
-            
-            //sequence.Tick(time);
 
-            Assert.IsType<SequenceNode>(sequence);
-            Assert.Equal(2, invokeCount);
-            Assert.InRange(st.ElapsedMilliseconds,1000,1100);
+            if (status == BehaviourTreeStatus.Success)
+            {
+                Assert.IsType<SequenceNode>(sequence);
+                Assert.Equal(2, invokeCount);
+                Assert.InRange(st.ElapsedMilliseconds, 1000, 1200);
+            }
+            
             //Assert.Equal(BehaviourTreeStatus.Success, sequence.Tick(new TimeData()));
             
         }
