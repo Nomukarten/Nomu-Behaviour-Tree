@@ -148,6 +148,33 @@ namespace tests
         }
 
         [Fact]
+        public void can_create_an_inverted_sequence()
+        {
+            Init();
+
+            var invokeCount = 0;
+
+            var sequence = testObject
+                .InvertedSequence("some-sequence")
+                .Do("some-action-1", t =>
+                {
+                    ++invokeCount;
+                    return BehaviourTreeStatus.Success;
+                })
+                .Do("some-action-2", t =>
+                {
+                    ++invokeCount;
+                    return BehaviourTreeStatus.Failure;
+                })
+                .End()
+                .Build();
+
+            Assert.IsType<InvertedSequenceNode>(sequence);
+            Assert.Equal(BehaviourTreeStatus.Success, sequence.Tick(new TimeData()));
+            Assert.Equal(2, invokeCount);
+        }
+
+        [Fact]
         public void can_create_parallel()
         {
             Init();

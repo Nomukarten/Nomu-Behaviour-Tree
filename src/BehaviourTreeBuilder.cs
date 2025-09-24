@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
+using FluentBehaviourTree;
 
 namespace FluentBehaviourTree
 {
@@ -36,6 +38,21 @@ namespace FluentBehaviourTree
         }
 
         /// <summary>
+        /// Create a wait node.
+        /// </summary>
+        public BehaviourTreeBuilder Wait(string name, double duration)
+        {
+            if (parentNodeStack.Count <= 0)
+            {
+                throw new ApplicationException("Can't create an unnested ActionNode, it must be a leaf node.");
+            }
+
+            var waitNode = new WaitNode(name, duration);
+            parentNodeStack.Peek().AddChild(waitNode);
+            return this;
+        }
+
+        /// <summary>
         /// Like an action node... but the function can return true/false and is mapped to success/failure.
         /// </summary>
         public BehaviourTreeBuilder Condition(string name, Func<TimeData, bool> fn)
@@ -65,6 +82,22 @@ namespace FluentBehaviourTree
         public BehaviourTreeBuilder Sequence(string name)
         {
             var sequenceNode = new SequenceNode(name);
+
+            if (parentNodeStack.Count > 0)
+            {
+                parentNodeStack.Peek().AddChild(sequenceNode);
+            }
+
+            parentNodeStack.Push(sequenceNode);
+            return this;
+        }
+
+        /// <summary>
+        /// Create a sequence node.
+        /// </summary>
+        public BehaviourTreeBuilder InvertedSequence(string name)
+        {
+            var sequenceNode = new InvertedSequenceNode(name);
 
             if (parentNodeStack.Count > 0)
             {

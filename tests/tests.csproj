@@ -52,11 +52,13 @@
   <ItemGroup>
     <Compile Include="ActionNodeTests.cs" />
     <Compile Include="BehaviourTreeBuilderTests.cs" />
+    <Compile Include="InvertedSequenceTests.cs" />
     <Compile Include="InverterNodeTests.cs" />
     <Compile Include="ParallelNodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelectorNodeTests.cs" />
     <Compile Include="SequenceNodeTests.cs" />
+    <Compile Include="WaitNodeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

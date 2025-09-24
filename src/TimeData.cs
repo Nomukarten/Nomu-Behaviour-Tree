@@ -10,11 +10,11 @@ namespace FluentBehaviourTree
     /// </summary>
     public struct TimeData
     {
-        public TimeData(float deltaTime)
+        public TimeData(double deltaTime)
         {
             this.deltaTime = deltaTime;
         }
 
-        public float deltaTime;
+        public double deltaTime;
     }
 }

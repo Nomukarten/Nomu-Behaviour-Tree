@@ -6,9 +6,9 @@ using System.Text;
 namespace FluentBehaviourTree
 {
     /// <summary>
-    /// Runs child nodes in sequence, until one fails.
+    /// Inverts the sequence: if any node fails returns success. If it passes it returns failure. 
     /// </summary>
-    public class SequenceNode : IParentBehaviourTreeNode
+    public class InvertedSequenceNode : IParentBehaviourTreeNode
     {
         /// <summary>
         /// Name of the node.
@@ -16,27 +16,30 @@ namespace FluentBehaviourTree
         private string name;
 
         /// <summary>
-        /// List of child nodes.
+        /// The sequence of nodes to be inverted.
         /// </summary>
-        private List<IBehaviourTreeNode> children = new List<IBehaviourTreeNode>(); //todo: this could be optimized as a baked array.
+        private List<IBehaviourTreeNode> children = new List<IBehaviourTreeNode>();
 
-        public SequenceNode(string name)
+        public InvertedSequenceNode(string name)
         {
             this.name = name;
         }
 
         public BehaviourTreeStatus Tick(TimeData time)
         {
+
             foreach (var child in children)
             {
                 var childStatus = child.Tick(time);
                 if (childStatus != BehaviourTreeStatus.Success)
                 {
-                    return childStatus;
+                    if (childStatus == BehaviourTreeStatus.Failure) //if any node fails return true
+                        return BehaviourTreeStatus.Success;
+
+                    else return childStatus;
                 }
             }
-
-            return BehaviourTreeStatus.Success;
+            return BehaviourTreeStatus.Failure; //if sequence completes return failure
         }
 
         /// <summary>
