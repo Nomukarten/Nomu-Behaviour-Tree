@@ -5,3 +5,7 @@ bin/
 *.user
 /src/.vs
 /.vs
+/src/lib/FluentBehaviourTree.dll
+/src/packages/Fluent-Behaviour-Tree.1.0.0/lib/net35/FluentBehaviourTree.dll
+/src/Fluent-Behaviour-Tree.nuspec
+/src/nuget.exe

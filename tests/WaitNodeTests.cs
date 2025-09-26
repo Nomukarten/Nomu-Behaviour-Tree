@@ -79,7 +79,7 @@ namespace tests
                     st.Start();
                     return BehaviourTreeStatus.Success;
                 })
-                .Wait("wait",1)
+                .Wait("wait",1000)
                 .Do("some-action-2", t =>
                 {
                     ++invokeCount;

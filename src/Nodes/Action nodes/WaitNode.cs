@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -23,25 +24,32 @@ namespace FluentBehaviourTree
         /// <summary>
         /// The amount of time this node waits in ms.
         /// </summary>
-        public double duration;
+        public double durationMilliseconds;
 
-        /// <summary>
-        /// Timing amount.
-        /// </summary>
-        public double elapsed;
+        private Stopwatch stopwatch;
 
-        public WaitNode(string name, double duration)
+        public WaitNode(string name, double durationMilliseconds)
         {
             this.name = name;
-            this.duration = duration;
-            this.elapsed = 0;
+            this.durationMilliseconds = durationMilliseconds;
+            stopwatch = new Stopwatch();
+
+            nodeState = BehaviourTreeStatus.Ready;
         }
 
+        //using stopwatch isnt ideal, it way be inaccurate on different systems
+        //but for now im not going to waste more time on this node than i need to
         public BehaviourTreeStatus Tick(TimeData time)
         {
-            elapsed += time.deltaTime*1000;
-            if (elapsed >= duration)
+            if (nodeState == BehaviourTreeStatus.Ready)
             {
+                stopwatch.Start();
+            }
+
+            //elapsed += time.deltaTime;
+            if (stopwatch.ElapsedMilliseconds >= durationMilliseconds)
+            {
+                stopwatch.Stop();
                 return BehaviourTreeStatus.Success;
             }
             return BehaviourTreeStatus.Running;
@@ -50,8 +58,8 @@ namespace FluentBehaviourTree
         public void Reset()
         {
             nodeState = BehaviourTreeStatus.Ready;
-            elapsed = 0;
-            duration = 0;
+            durationMilliseconds = 0;
+            stopwatch.Reset();
         }
     }
 }

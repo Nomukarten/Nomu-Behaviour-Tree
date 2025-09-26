@@ -51,19 +51,8 @@ namespace FluentBehaviourTree
                 currentIndex++;
             }
 
-            currentIndex = 0;
+            //currentIndex = 0;
             return BehaviourTreeStatus.Success;
-
-            //foreach (var child in children)
-            //{
-            //    var childStatus = child.Tick(time);
-            //    if (childStatus != BehaviourTreeStatus.Success)
-            //    {
-            //        return childStatus;
-            //    }
-            //}
-
-            //return BehaviourTreeStatus.Success;
         }
 
         public void Reset()
