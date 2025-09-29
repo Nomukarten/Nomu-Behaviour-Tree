@@ -93,7 +93,7 @@ namespace FluentBehaviourTree
         }
 
         /// <summary>
-        /// Create a sequence node.
+        /// Create an inverted sequence node.
         /// </summary>
         public BehaviourTreeBuilder InvertedSequence(string name)
         {
@@ -105,6 +105,65 @@ namespace FluentBehaviourTree
             }
 
             parentNodeStack.Push(sequenceNode);
+            return this;
+        }
+
+        /// <summary>
+        /// Create a repeater node.
+        /// </summary>
+        /// <param name="name">Node name</param>
+        /// <param name="count">Number of iterations</param>
+        /// <returns></returns>
+        public BehaviourTreeBuilder Repeat(string name, uint count)
+        {
+            var repeatNode = new RepeatNode(name,count);
+
+            if (parentNodeStack.Count > 0)
+            {
+                parentNodeStack.Peek().AddChild(repeatNode);
+            }
+
+            parentNodeStack.Push(repeatNode);
+            return this;
+        }
+
+        /// <summary>
+        /// Create a repeater node.
+        /// </summary>
+        /// <param name="name">Node name</param>
+        /// <param name="count">Number of iterations</param>
+        /// <param name="status">Status returned on tree completion</param>
+        /// <returns></returns>
+        public BehaviourTreeBuilder RepeatUntilFailure(string name, uint count, bool status)
+        {
+            var repeatNode = new RepeatUntilFailureNode(name, count, status);
+
+            if (parentNodeStack.Count > 0)
+            {
+                parentNodeStack.Peek().AddChild(repeatNode);
+            }
+
+            parentNodeStack.Push(repeatNode);
+            return this;
+        }
+
+        /// <summary>
+        /// Create a repeater node.
+        /// </summary>
+        /// <param name="name">Node name</param>
+        /// <param name="count">Number of iterations</param>
+        /// <param name="status">Status returned on tree completion</param>
+        /// <returns></returns>
+        public BehaviourTreeBuilder RepeatUntilSuccess(string name, uint count, bool status)
+        {
+            var repeatNode = new RepeatUntilSuccessNode(name, count, status);
+
+            if (parentNodeStack.Count > 0)
+            {
+                parentNodeStack.Peek().AddChild(repeatNode);
+            }
+
+            parentNodeStack.Push(repeatNode);
             return this;
         }
 

@@ -51,7 +51,7 @@
     <Compile Include="Nodes\Composite nodes\SelectorNode.cs" />
     <Compile Include="Nodes\Composite nodes\SequenceNode.cs" />
     <Compile Include="Nodes\Action nodes\WaitNode.cs" />
-    <Compile Include="Nodes\Decorator nodes\RepeatNode.cs" />
+    <Compile Include="Nodes\Composite nodes\RepeatNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimeData.cs" />
   </ItemGroup>
