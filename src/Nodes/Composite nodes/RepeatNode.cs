@@ -19,9 +19,24 @@ namespace FluentBehaviourTree
         protected uint count;
 
         /// <summary>
+        /// Track overall node state
+        /// </summary>
+        protected BehaviourTreeStatus nodeState = BehaviourTreeStatus.Ready;
+
+        /// <summary>
         /// List of child nodes.
         /// </summary>
         protected List<IBehaviourTreeNode> children = new List<IBehaviourTreeNode>(); //todo: this could be optimized as a baked array.
+
+        /// <summary>
+        /// Current iteration index (0-based)
+        /// </summary>
+        protected uint currentIteration;
+
+        /// <summary>
+        /// Index of the child currently being processed
+        /// </summary>
+        protected int currentChildIndex;
 
         /// <summary>
         /// Constructor
@@ -41,33 +56,65 @@ namespace FluentBehaviourTree
         /// <returns>Final completed child status</returns>
         public BehaviourTreeStatus Tick(TimeData time)
         {
+            if (nodeState == BehaviourTreeStatus.Ready)
+            {
+                nodeState = BehaviourTreeStatus.Running;
+            }
             BehaviourTreeStatus childStatus = BehaviourTreeStatus.Failure;
 
-            for (int i = 0; i < count; i++)
+            while (currentIteration < count)
             {
-                foreach (var child in children)
+                while (currentChildIndex < children.Count)
                 {
-                    childStatus = child.Tick(time);
+                    childStatus = children[currentChildIndex].Tick(time);
+
+                    if (childStatus == BehaviourTreeStatus.Running)
+                    {
+                        //if running stop current repeat loop for next tree re run
+                        return BehaviourTreeStatus.Running;
+                    }
+
                     if (childStatus == BehaviourTreeStatus.Failure)
                     {
+                        // On failure, reset state for next tree loop
+                        currentChildIndex = 0;
+                        nodeState = BehaviourTreeStatus.Ready;
                         ResetChildren();
                         break;
                     }
+
+                    // Child succeeded, advance to next child
+                    currentChildIndex++;
                 }
 
+                // Clear children on completed iteration
+                ResetChildren();
+                currentChildIndex = 0;
+                currentIteration++;
             }
 
+            //return last completed child status
             return childStatus;
         }
 
         public void Reset()
         {
-            count = 0;
+            currentIteration = 0;
+            currentChildIndex = 0;
+            nodeState = BehaviourTreeStatus.Ready;
             ResetChildren();
+        }
+
+        public BehaviourTreeStatus GetState()
+        {
+            return nodeState;
         }
 
         protected void ResetChildren()
         {
+            currentChildIndex = 0;
+            nodeState = BehaviourTreeStatus.Ready;
+
             foreach (var child in children)
             {
                 child.Reset();
@@ -105,22 +152,45 @@ namespace FluentBehaviourTree
 
         public new BehaviourTreeStatus Tick(TimeData time)
         {
+
+            if (nodeState == BehaviourTreeStatus.Ready)
+            {
+                nodeState = BehaviourTreeStatus.Running;
+            }
             BehaviourTreeStatus childStatus = BehaviourTreeStatus.Failure;
 
-            for (int i = 0; i < count; i++)
+            while (currentIteration < count)
             {
-                foreach (var child in children)
+                while (currentChildIndex < children.Count)
                 {
-                    childStatus = child.Tick(time);
+                    childStatus = children[currentChildIndex].Tick(time);
+
+                    if (childStatus == BehaviourTreeStatus.Running)
+                    {
+                        //if running stop current repeat loop for next tree re run
+                        return BehaviourTreeStatus.Running;
+                    }
 
                     if (childStatus == BehaviourTreeStatus.Failure)
                     {
+                        // On failure, reset state for next tree loop
+                        ResetChildren();
                         return finalState;
                     }
+
+                    // Child succeeded, advance to next child
+                    currentChildIndex++;
                 }
+
+                // Clear children on completed iteration
+                ResetChildren();
+                currentIteration++;
             }
 
+            //return last completed child status
+            currentIteration = 0;
             return childStatus;
+
         }
     }
 
@@ -132,21 +202,44 @@ namespace FluentBehaviourTree
 
         public new BehaviourTreeStatus Tick(TimeData time)
         {
+            if (nodeState == BehaviourTreeStatus.Ready)
+            {
+                nodeState = BehaviourTreeStatus.Running;
+            }
             BehaviourTreeStatus childStatus = BehaviourTreeStatus.Failure;
 
-            for (int i = 0; i < count; i++)
+            while (currentIteration < count)
             {
-                foreach (var child in children)
+                while (currentChildIndex < children.Count)
                 {
-                    childStatus = child.Tick(time);
+                    childStatus = children[currentChildIndex].Tick(time);
 
-                    if (childStatus == BehaviourTreeStatus.Success)
+                    if (childStatus == BehaviourTreeStatus.Running)
                     {
-                        return finalState;
+                        //if running stop current repeat loop for next tree re run
+                        return BehaviourTreeStatus.Running;
                     }
+                    else
+                    {
+                        ResetChildren();
+
+                        if(childStatus == BehaviourTreeStatus.Success)
+                            return finalState;
+
+                        break;
+                    }
+
+                    // Child succeeded, advance to next child
+                    currentChildIndex++;
                 }
+
+                // Clear children on completed iteration
+                ResetChildren();
+                currentIteration++;
             }
 
+            //return last completed child status
+            currentIteration = 0;
             return childStatus;
         }
     }

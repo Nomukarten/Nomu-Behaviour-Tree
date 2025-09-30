@@ -19,5 +19,11 @@ namespace FluentBehaviourTree
         /// Reset the state of the node
         /// </summary>
         void Reset();
+
+        /// <summary>
+        /// Get current node state
+        /// </summary>
+        BehaviourTreeStatus GetState();
+
     }
 }

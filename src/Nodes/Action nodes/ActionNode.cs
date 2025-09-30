@@ -45,5 +45,10 @@ namespace FluentBehaviourTree
         {
             nodeState = BehaviourTreeStatus.Ready;
         }
+
+        public BehaviourTreeStatus GetState()
+        {
+            return nodeState;
+        }
     }
 }

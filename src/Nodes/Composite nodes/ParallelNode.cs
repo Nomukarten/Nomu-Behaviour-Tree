@@ -73,6 +73,11 @@ namespace FluentBehaviourTree
             }
         }
 
+        public BehaviourTreeStatus GetState()
+        {
+            throw new NotImplementedException();
+        }
+
         public void AddChild(IBehaviourTreeNode child)
         {
             children.Add(child);

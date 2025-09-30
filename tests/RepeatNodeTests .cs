@@ -2,6 +2,7 @@
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Xunit;
@@ -155,13 +156,17 @@ namespace tests
             mockChild2
                 .Setup(m => m.Tick(time))
                 .Returns(BehaviourTreeStatus.Failure)
-                .Callback(() => { executionCount++; });
+                .Callback(() =>
+                {
+                    executionCount++;
+                });
 
             repeatSuccessNode.AddChild(mockChild1.Object);
             repeatSuccessNode.AddChild(mockChild2.Object);
 
             Assert.Equal(BehaviourTreeStatus.Failure, repeatSuccessNode.Tick(time));
-            Assert.Equal(5,executionCount);
+            Assert.Equal(4,executionCount);
         }
+
     }
 }

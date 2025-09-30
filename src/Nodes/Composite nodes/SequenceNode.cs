@@ -64,6 +64,11 @@ namespace FluentBehaviourTree
             }
         }
 
+        public BehaviourTreeStatus GetState()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Add a child to the sequence.
         /// </summary>

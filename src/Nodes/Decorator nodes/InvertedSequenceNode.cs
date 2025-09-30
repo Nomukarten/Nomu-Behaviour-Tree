@@ -44,6 +44,14 @@ namespace FluentBehaviourTree
 
         public void Reset()
         {
+            foreach (var child in children)
+            {
+                child.Reset();
+            }
+        }
+
+        public BehaviourTreeStatus GetState()
+        {
             throw new NotImplementedException();
         }
 

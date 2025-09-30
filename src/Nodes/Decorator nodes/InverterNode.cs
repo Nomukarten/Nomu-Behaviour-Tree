@@ -49,6 +49,11 @@ namespace FluentBehaviourTree
 
         public void Reset()
         {
+            childNode.Reset();
+        }
+
+        public BehaviourTreeStatus GetState()
+        {
             throw new NotImplementedException();
         }
 

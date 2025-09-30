@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace FluentBehaviourTree
 {
@@ -26,30 +26,40 @@ namespace FluentBehaviourTree
         /// </summary>
         public double durationMilliseconds;
 
-        private Stopwatch stopwatch;
+        private long startTimestampTicks = -1;
+        private static readonly double TimestampTickToMilliseconds = 1000.0 / Stopwatch.Frequency;
+        private long Ticks;
+        private long elapsedTicks;
+        private double elapsedMs;
 
         public WaitNode(string name, double durationMilliseconds)
         {
             this.name = name;
             this.durationMilliseconds = durationMilliseconds;
-            stopwatch = new Stopwatch();
-
             nodeState = BehaviourTreeStatus.Ready;
+
+            Ticks = 0;
+            elapsedTicks = 0;
+            elapsedMs = 0;
         }
 
-        //using stopwatch isnt ideal, it way be inaccurate on different systems
-        //but for now im not going to waste more time on this node than i need to
         public BehaviourTreeStatus Tick(TimeData time)
         {
             if (nodeState == BehaviourTreeStatus.Ready)
             {
-                stopwatch.Start();
+                nodeState = BehaviourTreeStatus.Running;
+                startTimestampTicks = Stopwatch.GetTimestamp();
             }
 
-            //elapsed += time.deltaTime;
-            if (stopwatch.ElapsedMilliseconds >= durationMilliseconds)
+            Ticks = Stopwatch.GetTimestamp();
+            elapsedTicks = Ticks - startTimestampTicks;
+            elapsedMs = elapsedTicks * TimestampTickToMilliseconds;
+
+            if (elapsedMs >= durationMilliseconds)
             {
-                stopwatch.Stop();
+                // Reset for potential re-use on next activation
+                nodeState = BehaviourTreeStatus.Ready;
+                startTimestampTicks = -1;
                 return BehaviourTreeStatus.Success;
             }
             return BehaviourTreeStatus.Running;
@@ -58,8 +68,15 @@ namespace FluentBehaviourTree
         public void Reset()
         {
             nodeState = BehaviourTreeStatus.Ready;
-            durationMilliseconds = 0;
-            stopwatch.Reset();
+            startTimestampTicks = -1;
+            Ticks = 0;
+            elapsedTicks = 0;
+            elapsedMs = 0;
+        }
+
+        public BehaviourTreeStatus GetState()
+        {
+            return nodeState;
         }
     }
 }
